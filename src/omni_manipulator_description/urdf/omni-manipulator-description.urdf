@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="omni-manipulator-description">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.00901312318197482 7.81757376177895E-05 0.0445423970884756"
+        rpy="0 0 0" />
+      <mass
+        value="0.527041850411029" />
+      <inertia
+        ixx="0.000864581380625486"
+        ixy="4.97642778210476E-07"
+        ixz="1.54819622657063E-08"
+        iyy="0.00161630877736204"
+        iyz="-8.23724472378619E-09"
+        izz="0.00177052599006481" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://omni_manipulator_description/meshes/visual/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.894117647058823 0.894117647058823 0.894117647058823 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://omni_manipulator_description/meshes/visual/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="front_left_wheel_link">
+    <inertial>
+      <origin
+        xyz="-4.5209E-06 -0.020971 -4.8866E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.1238" />
+      <inertia
+        ixx="2.3671E-05"
+        ixy="2.3772E-12"
+        ixz="5.4728E-11"
+        iyy="3.1205E-05"
+        iyz="-5.9358E-13"
+        izz="2.3671E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://omni_manipulator_description/meshes/visual/front_left_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://omni_manipulator_description/meshes/visual/front_left_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="front_left_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0.074941 0.12088 -0.037794"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="front_left_wheel_link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="front_right_wheel_link">
+    <inertial>
+      <origin
+        xyz="-4.4854E-05 0.020971 1.9913E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.1238" />
+      <inertia
+        ixx="2.3671E-05"
+        ixy="-7.1009E-13"
+        ixz="-1.524E-10"
+        iyy="3.1205E-05"
+        iyz="-2.3757E-12"
+        izz="2.3671E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://omni_manipulator_description/meshes/visual/front_right_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://omni_manipulator_description/meshes/visual/front_right_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="front_right_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="0.074874 -0.12088 -0.037679"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="front_right_wheel_link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="back_right_wheel_link">
+    <inertial>
+      <origin
+        xyz="-3.1993E-05 0.020971 3.7213E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.1238" />
+      <inertia
+        ixx="2.3671E-05"
+        ixy="-1.6153E-12"
+        ixz="-2.1865E-10"
+        iyy="3.1205E-05"
+        iyz="-1.8749E-12"
+        izz="2.3671E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://omni_manipulator_description/meshes/visual/back_right_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://omni_manipulator_description/meshes/visual/back_right_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_right_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="-0.088234 -0.12088 -0.037681"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="back_right_wheel_link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="back_left_wheel_link">
+    <inertial>
+      <origin
+        xyz="-3.3869E-07 -0.020971 -4.9074E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.1238" />
+      <inertia
+        ixx="2.3671E-05"
+        ixy="2.432E-12"
+        ixz="1.7836E-11"
+        iyy="3.1205E-05"
+        iyz="-3.8664E-13"
+        izz="2.3671E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://omni_manipulator_description/meshes/visual/back_left_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://omni_manipulator_description/meshes/visual/back_left_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_left_wheel_joint"
+    type="continuous">
+    <origin
+      xyz="-0.088195 0.12088 -0.037789"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="back_left_wheel_link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+
+  <gazebo>
+    <plugin
+      filename="gz-sim-mecanum-drive-system"
+      name="gz::sim::systems::MecanumDrive">
+      <!-- Topic for the command input -->
+      <topic>cmd_vel</topic>
+
+      <!-- Wheel joints -->
+      <front_left_joint>front_left_wheel_joint</front_left_joint>
+      <front_right_joint>front_right_wheel_joint</front_right_joint>
+      <back_left_joint>back_left_wheel_joint</back_left_joint>
+      <back_right_joint>back_right_wheel_joint</back_right_joint>
+
+      <!-- Wheel parameters -->
+      <wheel_separation>0.3</wheel_separation>
+      <wheelbase>0.3</wheelbase>
+      <wheel_radius>0.1</wheel_radius>
+
+      <!-- Control gains and limits (optional) -->
+      <min_acceleration>-5</min_acceleration>
+      <max_acceleration>5</max_acceleration>
+
+      <!-- Other parameters (optional) -->
+      <odom_topic>odom</odom_topic>
+      <tf_topic>tf</tf_topic>
+      <frame_id>odom</frame_id>
+      <child_frame_id>base_footprint</child_frame_id>
+      <odom_publish_frequency>30</odom_publish_frequency>
+    </plugin>
+  </gazebo>
+</robot>

@@ -1,0 +1,252 @@
+<sdf version="1.11">
+  <model name="omni-manipulator-description">
+    <link name="base_link">
+      <inertial>
+        <pose>-0.0090131231819748202 7.8175737617789496e-05 0.044542397088475599 0 0 0</pose>
+        <mass>0.52704185041102902</mass>
+        <inertia>
+          <ixx>0.000864581380625486</ixx>
+          <ixy>4.9764277821047601e-07</ixy>
+          <ixz>1.5481962265706302e-08</ixz>
+          <iyy>0.0016163087773620401</iyy>
+          <iyz>-8.2372447237861905e-09</iyz>
+          <izz>0.0017705259900648101</izz>
+        </inertia>
+      </inertial>
+      <collision name="base_link_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://omni_manipulator_description/meshes/visual/base_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="base_link_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://omni_manipulator_description/meshes/visual/base_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <ambient>1 1 1 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name="back_left_wheel_joint" type="revolute">
+      <pose relative_to="base_link">-0.088194999999999996 0.12088 -0.037789000000000003 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>back_left_wheel_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="back_left_wheel_link">
+      <pose relative_to="back_left_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-3.3869000000000002e-07 -0.020971 -4.9073999999999998e-05 0 0 0</pose>
+        <mass>0.12379999999999999</mass>
+        <inertia>
+          <ixx>2.3671000000000001e-05</ixx>
+          <ixy>2.4320000000000001e-12</ixy>
+          <ixz>1.7836000000000001e-11</ixz>
+          <iyy>3.1204999999999997e-05</iyy>
+          <iyz>-3.8664000000000001e-13</iyz>
+          <izz>2.3671000000000001e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name="back_left_wheel_link_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://omni_manipulator_description/meshes/visual/back_left_wheel_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="back_left_wheel_link_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://omni_manipulator_description/meshes/visual/back_left_wheel_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941174984 0.941174984 0.941174984 1</diffuse>
+          <ambient>0.941174984 0.941174984 0.941174984 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name="back_right_wheel_joint" type="revolute">
+      <pose relative_to="base_link">-0.088234000000000007 -0.12088 -0.037680999999999999 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>back_right_wheel_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="back_right_wheel_link">
+      <pose relative_to="back_right_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-3.1992999999999997e-05 0.020971 3.7212999999999998e-05 0 0 0</pose>
+        <mass>0.12379999999999999</mass>
+        <inertia>
+          <ixx>2.3671000000000001e-05</ixx>
+          <ixy>-1.6153e-12</ixy>
+          <ixz>-2.1864999999999999e-10</ixz>
+          <iyy>3.1204999999999997e-05</iyy>
+          <iyz>-1.8749e-12</iyz>
+          <izz>2.3671000000000001e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name="back_right_wheel_link_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://omni_manipulator_description/meshes/visual/back_right_wheel_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="back_right_wheel_link_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://omni_manipulator_description/meshes/visual/back_right_wheel_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941174984 0.941174984 0.941174984 1</diffuse>
+          <ambient>0.941174984 0.941174984 0.941174984 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name="front_left_wheel_joint" type="revolute">
+      <pose relative_to="base_link">0.074940999999999994 0.12088 -0.037794000000000001 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>front_left_wheel_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="front_left_wheel_link">
+      <pose relative_to="front_left_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-4.5209000000000002e-06 -0.020971 -4.8866000000000003e-05 0 0 0</pose>
+        <mass>0.12379999999999999</mass>
+        <inertia>
+          <ixx>2.3671000000000001e-05</ixx>
+          <ixy>2.3772e-12</ixy>
+          <ixz>5.4727999999999997e-11</ixz>
+          <iyy>3.1204999999999997e-05</iyy>
+          <iyz>-5.9357999999999998e-13</iyz>
+          <izz>2.3671000000000001e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name="front_left_wheel_link_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://omni_manipulator_description/meshes/visual/front_left_wheel_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="front_left_wheel_link_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://omni_manipulator_description/meshes/visual/front_left_wheel_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941174984 0.941174984 0.941174984 1</diffuse>
+          <ambient>0.941174984 0.941174984 0.941174984 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name="front_right_wheel_joint" type="revolute">
+      <pose relative_to="base_link">0.074873999999999996 -0.12088 -0.037678999999999997 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>front_right_wheel_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="front_right_wheel_link">
+      <pose relative_to="front_right_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-4.4854000000000001e-05 0.020971 1.9913000000000001e-05 0 0 0</pose>
+        <mass>0.12379999999999999</mass>
+        <inertia>
+          <ixx>2.3671000000000001e-05</ixx>
+          <ixy>-7.1008999999999996e-13</ixy>
+          <ixz>-1.5240000000000001e-10</ixz>
+          <iyy>3.1204999999999997e-05</iyy>
+          <iyz>-2.3757000000000001e-12</iyz>
+          <izz>2.3671000000000001e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name="front_right_wheel_link_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://omni_manipulator_description/meshes/visual/front_right_wheel_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="front_right_wheel_link_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://omni_manipulator_description/meshes/visual/front_right_wheel_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.941174984 0.941174984 0.941174984 1</diffuse>
+          <ambient>0.941174984 0.941174984 0.941174984 1</ambient>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
