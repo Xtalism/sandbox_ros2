@@ -1,5 +1,5 @@
 <sdf version="1.11">
-  <model name="omni-manipulator-description">
+  <model name="omni_manipulator_description">
     <link name="base_link">
       <inertial>
         <pose>-0.0090131231819748202 7.8175737617789496e-05 0.044542397088475599 0 0 0</pose>

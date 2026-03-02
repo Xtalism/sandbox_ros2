@@ -1,6 +1,7 @@
 # ROS2 
 log/
 install/
+.vscode/
 
 # ROS
 devel/
