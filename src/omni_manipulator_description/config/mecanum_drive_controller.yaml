@@ -23,7 +23,7 @@ mecanum_drive_controller:
         x: 0.0
         y: 0.0
         theta: 0.0
-      wheels_radius: 0.06
+      wheels_radius: 0.08
       sum_of_robot_center_projection_on_X_Y_axis: 0.20244
       # sum_of_robot_center_projection_on_X_Y_axis: 0.284
     

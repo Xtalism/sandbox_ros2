@@ -29,7 +29,7 @@ def generate_launch_description():
 
     # Changed to use URDF with xacro processing
     urdf_path = os.path.join(
-        bringup_dir, "urdf", "omni_manipulator_description.xacro.urdf"
+        bringup_dir, "description", "xacro", "omni_manipulator_description.urdf.xacro"
     )
     robot_desc = ParameterValue(Command(["xacro ", urdf_path]), value_type=str)
 
@@ -69,7 +69,6 @@ def generate_launch_description():
         ),
     )
 
-    # Single bridge node using config file
     bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
