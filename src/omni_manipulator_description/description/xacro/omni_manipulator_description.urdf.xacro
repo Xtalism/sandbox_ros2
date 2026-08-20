@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot name="omni_manipulator_description" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
-
   <xacro:include filename="robot_base.xacro"/>
   <xacro:include filename="wheels.xacro"/>
   <xacro:include filename="gazebo_control.xacro"/>
-
 </robot>

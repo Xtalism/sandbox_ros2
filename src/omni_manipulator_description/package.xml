@@ -4,7 +4,7 @@
   <name>omni_manipulator_description</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="olmer@gmail.com">ros-industrial</maintainer>
+  <maintainer email="manuel.pina.olivas@gmail.com">ros-industrial</maintainer>
   <license>TODO: License declaration</license>
 
   <build_depend>control_msgs</build_depend>

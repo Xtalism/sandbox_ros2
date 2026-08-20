@@ -25,15 +25,13 @@ def generate_launch_description():
     use_joint_state_pub = LaunchConfiguration("use_joint_state_pub")
     use_sim_time = LaunchConfiguration("use_sim_time", default=True)
     bringup_dir = get_package_share_directory("omni_manipulator_description")
-    world = os.path.join(bringup_dir, "world", "depot.sdf")
+    world = os.path.join(bringup_dir, "world", "bookstore_world", "bookstore.world")
 
-    # Changed to use URDF with xacro processing
     urdf_path = os.path.join(
         bringup_dir, "description", "xacro", "omni_manipulator_description.urdf.xacro"
     )
     robot_desc = ParameterValue(Command(["xacro ", urdf_path]), value_type=str)
 
-    # Robot controllers configuration
     robot_controllers = PathJoinSubstitution(
         [
             bringup_dir,
@@ -64,6 +62,8 @@ def generate_launch_description():
         value=":".join(
             [
                 os.path.join(bringup_dir, "world"),
+                os.path.join(bringup_dir, "world", "bookstore_world"),
+                os.path.join(bringup_dir, "world", "bookstore_world", "models"),
                 str(Path(bringup_dir).parent.resolve()),
             ]
         ),
