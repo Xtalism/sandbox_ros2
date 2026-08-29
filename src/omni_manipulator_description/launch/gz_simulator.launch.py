@@ -39,7 +39,6 @@ def generate_launch_description():
             "mecanum_drive_controller.yaml",
         ]
     )
-
     start_robot_state_publisher_cmd = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
@@ -47,7 +46,6 @@ def generate_launch_description():
         output="both",
         parameters=[{"use_sim_time": True}, {"robot_description": robot_desc}],
     )
-
     start_joint_state_publisher_cmd = Node(
         condition=IfCondition(use_joint_state_pub),
         package="joint_state_publisher_gui",
@@ -56,7 +54,6 @@ def generate_launch_description():
         output="screen",
         arguments=[urdf_file],
     )
-
     gz_resource_path = SetEnvironmentVariable(
         name="GZ_SIM_RESOURCE_PATH",
         value=":".join(
@@ -68,7 +65,6 @@ def generate_launch_description():
             ]
         ),
     )
-
     bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
@@ -81,7 +77,6 @@ def generate_launch_description():
         ],
         output="screen",
     )
-
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [
@@ -94,8 +89,6 @@ def generate_launch_description():
         ),
         launch_arguments={"gz_args": ["-r -v 4 ", world]}.items(),
     )
-
-    # Spawn the robot in Gazebo
     spawn_entity = Node(
         package="ros_gz_sim",
         executable="create",
@@ -109,20 +102,16 @@ def generate_launch_description():
             "-y",
             "0",
             "-z",
-            "0.1",
+            "0.058",
         ],
         output="screen",
     )
-
-    # Clock bridge for simulation time
     clock_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         arguments=["/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"],
         output="screen",
     )
-
-    # Controller spawners with event handlers for proper sequencing
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -133,7 +122,6 @@ def generate_launch_description():
         ],
         output="screen",
     )
-
     mecanum_drive_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -146,8 +134,7 @@ def generate_launch_description():
         ],
         output="screen",
     )
-
-    rviz_config_file = os.path.join(bringup_dir, "config", "config.rviz")
+    rviz_config_file = os.path.join(bringup_dir, "rviz", "config.rviz")
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -156,14 +143,11 @@ def generate_launch_description():
         arguments=["-d", rviz_config_file],
         parameters=[{"use_sim_time": True}],
     )
-
     tf_map = Node(
         package="tf2_ros",
         executable="static_transform_publisher",
         arguments=["0", "0", "0", "0", "0", "0", "map", "odom"],
     )
-
-    # Launch!
     return LaunchDescription(
         [
             DeclareLaunchArgument(
