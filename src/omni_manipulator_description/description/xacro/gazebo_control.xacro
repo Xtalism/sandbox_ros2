@@ -65,32 +65,32 @@
     </hardware>
     <joint name="front_left_wheel_joint">
       <command_interface name="velocity">
-        <param name="min">-1</param>
-        <param name="max">1</param>
+        <param name="min">-4</param>
+        <param name="max">4</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
     <joint name="front_right_wheel_joint">
       <command_interface name="velocity">
-        <param name="min">-1</param>
-        <param name="max">1</param>
+        <param name="min">-4</param>
+        <param name="max">4</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
     <joint name="rear_left_wheel_joint">
       <command_interface name="velocity">
-        <param name="min">-1</param>
-        <param name="max">1</param>
+        <param name="min">-4</param>
+        <param name="max">4</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
     </joint>
     <joint name="rear_right_wheel_joint">
       <command_interface name="velocity">
-        <param name="min">-1</param>
-        <param name="max">1</param>
+        <param name="min">-4</param>
+        <param name="max">4</param>
       </command_interface>
       <state_interface name="position"/>
       <state_interface name="velocity"/>
@@ -103,7 +103,13 @@
       <parameters>$(find omni_manipulator_description)/config/mecanum_drive_controller.yaml</parameters>
       <ros>
         <remapping>/mecanum_drive_controller/reference:=/cmd_vel</remapping>
-        <remapping>/mecanum_drive_controller/odom:=/odom</remapping>
+        <!-- Renamed from /odom: this is now raw wheel-only odometry, an
+             input to ekf_filter_node (see ekf.yaml), not the frame that
+             nav2/slam_toolbox consume. enable_odom_tf is false in
+             mecanum_drive_controller.yaml, so there is no tf_odometry
+             topic to remap anymore - the EKF is the sole odom->base_link
+             publisher. -->
+        <remapping>/mecanum_drive_controller/odometry:=/wheel_odom</remapping>
       </ros>
     </plugin>
   </gazebo>

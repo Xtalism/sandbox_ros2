@@ -1,0 +1,43 @@
+### ekf config file ###
+ekf_filter_node:
+  ros__parameters:
+    frequency: 30.0
+    two_d_mode: true
+    publish_acceleration: false
+
+    # Sole publisher of odom->base_link - mecanum_drive_controller's own
+    # enable_odom_tf is false to avoid two nodes broadcasting the same
+    # transform (the bug fixed earlier this session).
+    publish_tf: true
+
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom
+
+    # Raw wheel odometry (mecanum_drive_controller, renamed from /odom
+    # in gazebo_control.xacro). Fuse velocity only, not position - let
+    # the filter integrate, same pattern as sam_bot's ekf.yaml. vy is
+    # fused (unlike a diff-drive robot) since this base is holonomic.
+    odom0: wheel_odom
+    odom0_config:
+      [
+        false, false, false,
+        false, false, false,
+        true, true, false,
+        false, false, true,
+        false, false, false,
+      ]
+
+    # Gyro yaw rate only - a direct, slip-independent measurement of
+    # actual rotation, to correct mecanum wheel slip during turns that
+    # was causing slam_toolbox's map offset.
+    imu0: imu
+    imu0_config:
+      [
+        false, false, false,
+        false, false, false,
+        false, false, false,
+        false, false, true,
+        false, false, false,
+      ]

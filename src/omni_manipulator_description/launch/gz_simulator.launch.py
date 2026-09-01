@@ -25,7 +25,22 @@ def generate_launch_description():
     use_joint_state_pub = LaunchConfiguration("use_joint_state_pub")
     use_sim_time = LaunchConfiguration("use_sim_time", default=True)
     bringup_dir = get_package_share_directory("omni_manipulator_description")
+    slam_toolbox_share = get_package_share_directory("slam_toolbox")
+    nav2_bringup_share = get_package_share_directory("nav2_bringup")
     world = os.path.join(bringup_dir, "world", "bookstore_world", "bookstore.world")
+
+    slam_toolbox_launch_source = os.path.join(
+        slam_toolbox_share, "launch", "online_async_launch.py"
+    )
+    nav2_launch_source = os.path.join(
+        nav2_bringup_share, "launch", "navigation_launch.py"
+    )
+    nav2_config_path = os.path.join(bringup_dir, "config", "nav2_params.yaml")
+    slam_config_path = os.path.join(bringup_dir, "config", "slam_toolbox_params.yaml")
+    laser_filters_config_path = os.path.join(
+        bringup_dir, "config", "laser_filters.yaml"
+    )
+    ekf_config_path = os.path.join(bringup_dir, "config", "ekf.yaml")
 
     urdf_path = os.path.join(
         bringup_dir, "description", "xacro", "omni_manipulator_description.urdf.xacro"
@@ -64,6 +79,52 @@ def generate_launch_description():
                 str(Path(bringup_dir).parent.resolve()),
             ]
         ),
+    )
+    # Without this, gz-sim's headless sensor rendering (Sensors system,
+    # used by gpu_lidar and imu) falls back to Mesa's EGL/DRI2 path,
+    # which fails on NVIDIA proprietary drivers ("failed to create dri2
+    # screen") and silently produces zero sensor data. Forces the NVIDIA
+    # EGL implementation instead.
+    egl_vendor = SetEnvironmentVariable(
+        name="__EGL_VENDOR_LIBRARY_FILENAMES",
+        value="/usr/share/glvnd/egl_vendor.d/10_nvidia.json",
+    )
+    glx_vendor = SetEnvironmentVariable(
+        name="__GLX_VENDOR_LIBRARY_NAME",
+        value="nvidia",
+    )
+    laser_filter_node = Node(
+        package="laser_filters",
+        executable="scan_to_scan_filter_chain",
+        parameters=[laser_filters_config_path],
+        remappings=[
+            ("scan", "/scan_raw"),
+            ("scan_filtered", "/scan"),
+        ],
+    )
+    robot_localization_node = Node(
+        package="robot_localization",
+        executable="ekf_node",
+        name="ekf_filter_node",
+        output="screen",
+        parameters=[
+            ekf_config_path,
+            {"use_sim_time": True},
+        ],
+        remappings=[
+            ("odometry/filtered", "/odom"),
+        ],
+    )
+    voxel_marker_node = Node(
+        package="nav2_costmap_2d",
+        executable="nav2_costmap_2d_markers",
+        name="local_costmap_voxel_markers",
+        output="screen",
+        parameters=[{"use_sim_time": True}],
+        remappings=[
+            ("voxel_grid", "/local_costmap/voxel_grid"),
+            ("visualization_marker", "/local_costmap/voxel_marker"),
+        ],
     )
     bridge = Node(
         package="ros_gz_bridge",
@@ -143,10 +204,19 @@ def generate_launch_description():
         arguments=["-d", rviz_config_file],
         parameters=[{"use_sim_time": True}],
     )
-    tf_map = Node(
-        package="tf2_ros",
-        executable="static_transform_publisher",
-        arguments=["0", "0", "0", "0", "0", "0", "map", "odom"],
+    slam_toolbox = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(slam_toolbox_launch_source),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "slam_params_file": slam_config_path,
+        }.items(),
+    )
+    nav2_bringup = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(nav2_launch_source),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "params_file": nav2_config_path,
+        }.items(),
     )
     return LaunchDescription(
         [
@@ -171,15 +241,20 @@ def generate_launch_description():
                 description="Whether to start the joint state publisher",
             ),
             gz_resource_path,
+            egl_vendor,
+            glx_vendor,
             gz_sim,
             clock_bridge,
             bridge,
             start_robot_state_publisher_cmd,
             spawn_entity,
-            tf_map,
             rviz_node,
             start_joint_state_publisher_cmd,
-            # Event handlers for proper controller initialization sequence
+            laser_filter_node,
+            robot_localization_node,
+            voxel_marker_node,
+            slam_toolbox,
+            nav2_bringup,
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=spawn_entity,

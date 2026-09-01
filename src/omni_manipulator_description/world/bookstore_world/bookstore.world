@@ -1,6 +1,24 @@
 <?xml version='1.0' encoding='utf-8'?>
 <sdf version="1.6">
   <world name="default">
+    <!-- This world had no explicit <plugin> tags, so gz-sim fell back to
+         its bare default set (Physics, UserCommands, SceneBroadcaster
+         only - see /usr/share/gz/gz-sim8/server.config). That excludes
+         the Sensors system entirely, silently producing zero data from
+         every lidar/camera/IMU regardless of physics or rendering being
+         fine. Declaring plugins explicitly here also means the defaults
+         are no longer auto-inserted, so all of them must be listed. -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+    </plugin>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
     <!-- override the default position of the camera -->
     <gui>
       <camera name='gzclient_camera'>
@@ -30,7 +48,6 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
 
-
 	<model name="AirConditionerC_01_001">
         <include>
             <uri>model://aws_robomaker_retail_AirConditionerC_01</uri>
@@ -38,15 +55,12 @@
         <pose frame="">7.458202 1.422453 3.290944 0 -0 -1.564217</pose>
 	</model>
 
-
 	<model name="Bicycle_01_001">
         <include>
             <uri>model://aws_robomaker_retail_Bicycle_01</uri>
         </include>
         <pose frame="">5.681248 -2.242451 0.931246 0.000002 -0.000024 0</pose>
 	</model>
-
-
 
 	<model name="BookE_01_001">
         <include>

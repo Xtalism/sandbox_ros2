@@ -29,7 +29,12 @@ mecanum_drive_controller:
 
     base_frame_id: "base_link"
     odom_frame_id: "odom"
-    enable_odom_tf: true
+    # ekf_filter_node (robot_localization) is the sole publisher of
+    # odom->base_link now, fusing this wheel odometry with the IMU's
+    # gyro to correct for mecanum wheel slip during rotation. Leaving
+    # this true would recreate the exact duplicate-TF-publisher bug
+    # fixed earlier this session (two nodes broadcasting the same edge).
+    enable_odom_tf: false
 
     publish_rate: 50.0
     pose_covariance_diagonal: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
