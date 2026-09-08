@@ -36,8 +36,6 @@
   <joint name="imu_joint" type="fixed">
     <parent link="base_link"/>
     <child link="imu_link"/>
-    <!-- NOTE: verify this height still makes sense for your chassis
-         given the MPU6050's actual mounting location. -->
     <origin xyz="0 0 0.01" rpy="0 0 0"/>
   </joint>
 

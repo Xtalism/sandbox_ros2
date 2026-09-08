@@ -1,7 +1,15 @@
 ### ekf config file ###
 ekf_filter_node:
   ros__parameters:
-    frequency: 30.0
+    # 20Hz, not 30 - matches controller_server's own rate (nothing
+    # downstream reads odom->base_link faster than that), and gives
+    # the filter more slack per cycle under load. It logged missing
+    # its 30Hz deadline (0.052s for a 0.033s budget) right at a
+    # "jump back in time" cascade - as sole publisher of odom->base_link,
+    # a late/stale EKF cycle is a plausible trigger for the TF jitter
+    # that's been scattering camera points into a starburst around the
+    # robot mid-run.
+    frequency: 20.0
     two_d_mode: true
     publish_acceleration: false
 
