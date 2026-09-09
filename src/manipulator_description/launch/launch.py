@@ -25,9 +25,13 @@ def generate_launch_description():
     use_rviz = LaunchConfiguration("use_rviz")
     urdf_file = LaunchConfiguration("urdf_file")
 
+    urdf_path = os.path.join(
+        bringup_dir, "description", "urdf", "manipulator_description.urdf"
+    )
+
     declare_rviz_config_file_cmd = DeclareLaunchArgument(
         "rviz_config_file",
-        default_value=os.path.join(bringup_dir, "rviz", "view.rviz"),
+        default_value=os.path.join(bringup_dir, "rviz", "config.rviz"),
         description="Full path to the RVIZ config file to use",
     )
 
@@ -49,7 +53,7 @@ def generate_launch_description():
 
     declare_urdf_cmd = DeclareLaunchArgument(
         "urdf_file",
-        default_value=os.path.join(bringup_dir, "urdf", "manipulator_description.urdf"),
+        default_value=urdf_path,
         description="Whether to start RVIZ",
     )
 

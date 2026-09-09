@@ -11,6 +11,7 @@ data_files = [
     ("share/" + package_name + "/launch/", glob("launch/*.py")),
     ("share/" + package_name + "/description/urdf/", glob("description/urdf/*")),
     ("share/" + package_name + "/description/xacro/", glob("description/xacro/*")),
+    ("share/" + package_name + "/description/sdf/", glob("description/sdf/*")),
     ("share/" + package_name + "/world/", glob("world/*.world") + glob("world/*.sdf")),
     (
         "share/" + package_name + "/world/bookstore_world/",
