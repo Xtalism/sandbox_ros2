@@ -73,6 +73,9 @@ def generate_launch_description():
         executable="joint_state_publisher_gui",
         name="joint_state_publisher_gui",
         output="screen",
+        # Startup pose only. URDF zero stays at hardware zero; this just parks
+        # the arm folded instead of extended flat against its old end-stops.
+        # parameters=[{"zeros": {"joint_3": 1.57079632679, "joint_4": 1.57079632679}}],
         arguments=[urdf_file],
     )
 
@@ -83,12 +86,6 @@ def generate_launch_description():
         name="rviz2",
         arguments=["-d", rviz_config_file],
         output="screen",
-    )
-
-    tf_map = Node(
-        package="tf2_ros",
-        executable="static_transform_publisher",
-        arguments=["0", "0", "0", "0", "0", "0", "map", "odom"],
     )
 
     # Create the launch description and populate
@@ -105,6 +102,5 @@ def generate_launch_description():
     ld.add_action(start_joint_state_publisher_cmd)
     ld.add_action(start_robot_state_publisher_cmd)
     ld.add_action(rviz_cmd)
-    ld.add_action(tf_map)
 
     return ld
