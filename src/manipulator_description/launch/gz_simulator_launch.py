@@ -20,15 +20,13 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
-    use_robot_state_pub = LaunchConfiguration("use_robot_state_pub")
-    urdf_file = LaunchConfiguration("urdf_file")
-    # Check if we're told to use sim time
-    use_sim_time = LaunchConfiguration("use_sim_time")
     bringup_dir = get_package_share_directory("manipulator_description")
     world = os.path.join(bringup_dir, "world", "depot.sdf")
-    sdf_file = os.path.join(bringup_dir, "urdf", "robot.sdf")
-    with open(sdf_file, "r") as infp:
-        robot_desc = infp.read()
+    rviz_config_file = os.path.join(bringup_dir, "rviz", "config.rviz")
+    urdf_path = os.path.join(
+        bringup_dir, "description", "xacro", "manipulator_description.urdf.xacro"
+    )
+    robot_desc = ParameterValue(Command(["xacro ", urdf_path]), value_type=str)
 
     start_robot_state_publisher_cmd = Node(
         package="robot_state_publisher",
@@ -37,7 +35,6 @@ def generate_launch_description():
         output="both",
         parameters=[{"use_sim_time": True}, {"robot_description": robot_desc}],
     )
-
     gz_resource_path = SetEnvironmentVariable(
         name="GZ_SIM_RESOURCE_PATH",
         value=":".join(
@@ -47,15 +44,24 @@ def generate_launch_description():
             ]
         ),
     )
-
-    joint_state_publisher = Node(
-        package="joint_state_publisher",
-        executable="joint_state_publisher",
-        name="joint_state_publisher",
-        output="screen",
-        parameters=[{"use_sim_time": True}],
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "joint_state_broadcaster",
+            "--controller-manager",
+            "/controller_manager",
+        ],
     )
-
+    manipulator_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "manipulator_controller",
+            "--controller-manager",
+            "/controller_manager",
+        ],
+    )
     bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
@@ -67,7 +73,6 @@ def generate_launch_description():
         ],
         output="screen",
     )
-
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [
@@ -80,8 +85,6 @@ def generate_launch_description():
         ),
         launch_arguments={"gz_args": ["-r -v 4 ", world]}.items(),
     )
-
-    # Spawn the robot in Gazebo
     spawn_entity = Node(
         package="ros_gz_sim",
         executable="create",
@@ -95,27 +98,27 @@ def generate_launch_description():
             "-y",
             "0",
             "-z",
-            "2.0",
+            "0.0",
         ],
         output="screen",
     )
-
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="screen",
+        arguments=["-d", rviz_config_file],
+        parameters=[{"use_sim_time": True}],
+    )
     tf_map = Node(
         package="tf2_ros",
         executable="static_transform_publisher",
         arguments=["0", "0", "0", "0", "0", "0", "map", "odom"],
     )
-
-    # Launch!
     return LaunchDescription(
         [
             DeclareLaunchArgument(
                 "use_sim_time", default_value="True", description="Use sim time if true"
-            ),
-            DeclareLaunchArgument(
-                "urdf_file",
-                default_value=os.path.join(bringup_dir, "urdf", "assembly_robot.urdf"),
-                description="Whether to start RVIZ",
             ),
             DeclareLaunchArgument(
                 "use_robot_state_pub",
@@ -128,7 +131,8 @@ def generate_launch_description():
             spawn_entity,
             start_robot_state_publisher_cmd,
             tf_map,
-            joint_state_publisher,
+            joint_state_broadcaster_spawner,
+            manipulator_controller_spawner,
+            rviz_node,
         ]
     )
-

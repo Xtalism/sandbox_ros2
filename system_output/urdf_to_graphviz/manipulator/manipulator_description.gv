@@ -6,18 +6,15 @@ node [shape=box];
 "link_3" [label="link_3"];
 "link_4" [label="link_4"];
 "link_5" [label="link_5"];
-"end_effector" [label="end_effector"];
 node [shape=ellipse, color=blue, fontcolor=blue];
-"base_link" -> "joint_1" [label="xyz: 0.0332346 0.0176158 0.0310933 \nrpy: 1.5708 -0 0"]
+"base_link" -> "joint_1" [label="xyz: -0.00013003 -0.010042 0.0523 \nrpy: 0 -0 0"]
 "joint_1" -> "link_1"
-"link_1" -> "joint_2" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"link_1" -> "joint_2" [label="xyz: -0.0099229 -0.0403 0.01289 \nrpy: 1.5708 -0 0"]
 "joint_2" -> "link_2"
-"link_2" -> "joint_3" [label="xyz: 0.114064 -0.00578564 0 \nrpy: 3.14159 -0 0"]
+"link_2" -> "joint_3" [label="xyz: 0.10399 0 -0.0536 \nrpy: -3.14159 -4.23516e-22 1.5708"]
 "joint_3" -> "link_3"
-"link_3" -> "joint_4" [label="xyz: 0.0769466 0.0002706 0 \nrpy: 0 -0 0"]
+"link_3" -> "joint_4" [label="xyz: 0.096947 0.00052331 -0.053071 \nrpy: -3.14159 -4.23516e-22 1.5708"]
 "joint_4" -> "link_4"
-"link_4" -> "joint_5" [label="xyz: 0.0402287 -0.00590116 -0.0500489 \nrpy: 1.5708 -5.55112e-17 1.5708"]
+"link_4" -> "joint_5" [label="xyz: 0.06599 0.011967 -0.019837 \nrpy: -1.5708 -0 -1.5708"]
 "joint_5" -> "link_5"
-"link_5" -> "end_effector_joint" [label="xyz: -0.00529156 0.0386282 0.019564 \nrpy: 0 -0 0"]
-"end_effector_joint" -> "end_effector"
 }
