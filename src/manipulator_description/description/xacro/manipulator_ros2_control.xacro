@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ros2_control hardware description for the arm, without the
+     gz_ros2_control plugin tag. The plugin is declared once per robot by
+     whoever assembles the final URDF, because a second plugin instance
+     would spawn a second controller_manager. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
+
+  <xacro:property name="PI" value="3.14159265359" />
+
+  <!-- initial_positions_file: absolute path to a YAML file with an
+       "initial_positions" map keyed by UNPREFIXED joint names. Required, so
+       the spawn pose is always an explicit choice rather than an accident of
+       whatever all-zeros happens to look like. Note that gz_ros2_control only
+       applies initial_value on joints that also declare a command_interface
+       (all five do here). -->
+  <xacro:macro name="manipulator_ros2_control" params="name:='RobotSystem' prefix:='' initial_positions_file">
+    <xacro:property name="initial_positions"
+                    value="${xacro.load_yaml(initial_positions_file)['initial_positions']}"/>
+
+    <ros2_control name="${name}" type="system">
+      <hardware>
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+      </hardware>
+
+      <joint name="${prefix}joint_1">
+        <command_interface name="position">
+          <param name="min">-${PI/2}</param>
+          <param name="max">${PI/2}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['joint_1']}</param>
+        </state_interface>
+      </joint>
+
+      <joint name="${prefix}joint_2">
+        <command_interface name="position">
+          <param name="min">-0.18</param>
+          <param name="max">${PI/2}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['joint_2']}</param>
+        </state_interface>
+      </joint>
+
+      <joint name="${prefix}joint_3">
+        <command_interface name="position">
+          <param name="min">-0.9</param>
+          <param name="max">${PI/2}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['joint_3']}</param>
+        </state_interface>
+      </joint>
+
+      <joint name="${prefix}joint_4">
+        <command_interface name="position">
+          <param name="min">-0.7</param>
+          <param name="max">${PI/2}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['joint_4']}</param>
+        </state_interface>
+      </joint>
+
+      <joint name="${prefix}joint_5">
+        <command_interface name="position">
+          <param name="min">-${PI/2}</param>
+          <param name="max">${PI/2}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['joint_5']}</param>
+        </state_interface>
+      </joint>
+    </ros2_control>
+  </xacro:macro>
+
+</robot>

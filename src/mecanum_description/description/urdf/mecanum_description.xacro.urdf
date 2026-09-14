@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot
-  name="omni_manipulator_description" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
+  name="mecanum_description" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
   
   <link name="base_link">
     <inertial>
@@ -23,7 +23,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://omni_manipulator_description/meshes/visual/base_link.STL" />
+          filename="package://mecanum_description/meshes/visual/base_link.STL" />
       </geometry>
       <material name="">
         <color
@@ -61,7 +61,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://omni_manipulator_description/meshes/visual/front_left_wheel_link.STL" />
+          filename="package://mecanum_description/meshes/visual/front_left_wheel_link.STL" />
       </geometry>
       <material name="">
         <color
@@ -113,7 +113,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://omni_manipulator_description/meshes/visual/front_right_wheel_link.STL" />
+          filename="package://mecanum_description/meshes/visual/front_right_wheel_link.STL" />
       </geometry>
       <material name="">
         <color
@@ -165,7 +165,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://omni_manipulator_description/meshes/visual/rear_right_wheel_link.STL" />
+          filename="package://mecanum_description/meshes/visual/rear_right_wheel_link.STL" />
       </geometry>
       <material name="">
         <color
@@ -217,7 +217,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://omni_manipulator_description/meshes/visual/rear_left_wheel_link.STL" />
+          filename="package://mecanum_description/meshes/visual/rear_left_wheel_link.STL" />
       </geometry>
       <material name="">
         <color
@@ -347,7 +347,7 @@
   <!-- Gazebo ROS2 Control plugin -->
   <gazebo>
     <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-      <parameters>$(find omni_manipulator_description)/config/mecanum_drive_controller.yaml</parameters>
+      <parameters>$(find mecanum_description)/config/mecanum_drive_controller.yaml</parameters>
       <ros>
         <remapping>/mecanum_drive_controller/reference:=/cmd_vel</remapping>
         <remapping>/mecanum_drive_controller/odom:=/odom</remapping>

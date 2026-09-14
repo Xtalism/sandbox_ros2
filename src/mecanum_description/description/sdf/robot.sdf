@@ -1,5 +1,5 @@
 <sdf version="1.11">
-  <model name="omni_manipulator_description">
+  <model name="mecanum_description">
     <link name="base_link">
       <inertial>
         <pose>-0.0090131231819748202 7.8175737617789496e-05 0.044542397088475599 0 0 0</pose>
@@ -18,7 +18,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>package://omni_manipulator_description/meshes/visual/base_link.STL</uri>
+            <uri>package://mecanum_description/meshes/visual/base_link.STL</uri>
           </mesh>
         </geometry>
       </collision>
@@ -27,7 +27,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>package://omni_manipulator_description/meshes/visual/base_link.STL</uri>
+            <uri>package://mecanum_description/meshes/visual/base_link.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -71,7 +71,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>package://omni_manipulator_description/meshes/visual/back_left_wheel_link.STL</uri>
+            <uri>package://mecanum_description/meshes/visual/back_left_wheel_link.STL</uri>
           </mesh>
         </geometry>
       </collision>
@@ -80,7 +80,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>package://omni_manipulator_description/meshes/visual/back_left_wheel_link.STL</uri>
+            <uri>package://mecanum_description/meshes/visual/back_left_wheel_link.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -124,7 +124,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>package://omni_manipulator_description/meshes/visual/back_right_wheel_link.STL</uri>
+            <uri>package://mecanum_description/meshes/visual/back_right_wheel_link.STL</uri>
           </mesh>
         </geometry>
       </collision>
@@ -133,7 +133,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>package://omni_manipulator_description/meshes/visual/back_right_wheel_link.STL</uri>
+            <uri>package://mecanum_description/meshes/visual/back_right_wheel_link.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -177,7 +177,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>package://omni_manipulator_description/meshes/visual/front_left_wheel_link.STL</uri>
+            <uri>package://mecanum_description/meshes/visual/front_left_wheel_link.STL</uri>
           </mesh>
         </geometry>
       </collision>
@@ -186,7 +186,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>package://omni_manipulator_description/meshes/visual/front_left_wheel_link.STL</uri>
+            <uri>package://mecanum_description/meshes/visual/front_left_wheel_link.STL</uri>
           </mesh>
         </geometry>
         <material>
@@ -230,7 +230,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>package://omni_manipulator_description/meshes/visual/front_right_wheel_link.STL</uri>
+            <uri>package://mecanum_description/meshes/visual/front_right_wheel_link.STL</uri>
           </mesh>
         </geometry>
       </collision>
@@ -239,7 +239,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>package://omni_manipulator_description/meshes/visual/front_right_wheel_link.STL</uri>
+            <uri>package://mecanum_description/meshes/visual/front_right_wheel_link.STL</uri>
           </mesh>
         </geometry>
         <material>

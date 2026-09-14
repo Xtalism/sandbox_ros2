@@ -22,7 +22,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://omni_manipulator_description/meshes/visual/base_link.STL" />
+          filename="package://mecanum_description/meshes/visual/base_link.STL" />
       </geometry>
       <material name="">
         <color

@@ -1,0 +1,9 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: omni_manipulator_description
+    relative_path: description/xacro/omni_manipulator_description.urdf.xacro
+  srdf:
+    relative_path: config/omni_manipulator.srdf
+  package_settings:
+    author_name: Manuel
+    author_email: manuel.pina.olivas@gmail.com

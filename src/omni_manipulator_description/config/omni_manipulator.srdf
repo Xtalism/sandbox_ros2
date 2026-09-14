@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Semantic description of the mobile manipulator. The robot name must match
+    the <robot name=...> in description/xacro/omni_manipulator_description.urdf.xacro.
+
+    Hand-written rather than generated: re-run the MoveIt Setup Assistant on
+    the combined xacro if you want the collision matrix sampled exhaustively
+    instead of reasoned about (the pairs below are the ones that are
+    structurally impossible, nothing was disabled on "never in 10000 random
+    samples" evidence). -->
+<robot name="omni_manipulator">
+
+    <!--The base drives around, so the arm's root is not fixed in the world.
+        odom->base_link is published by ekf_filter_node (robot_localization);
+        MoveIt reads this joint's state off TF. -->
+    <virtual_joint name="base_joint" type="planar" parent_frame="odom" child_link="base_link"/>
+
+    <group name="manipulator">
+        <chain base_link="arm_base_link" tip_link="arm_link_5"/>
+    </group>
+
+    <group_state name="Home" group="manipulator">
+        <joint name="arm_joint_1" value="0.0"/>
+        <joint name="arm_joint_2" value="-0.17"/>
+        <joint name="arm_joint_3" value="-0.89"/>
+        <joint name="arm_joint_4" value="-0.69"/>
+        <joint name="arm_joint_5" value="0.0"/>
+    </group_state>
+
+    <!-- ===================== Arm-internal pairs ===================== -->
+    <disable_collisions link1="arm_base_link" link2="arm_link_1" reason="Adjacent"/>
+    <disable_collisions link1="arm_base_link" link2="arm_link_2" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="arm_link_3" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="arm_link_4" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="arm_link_5" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="arm_link_2" reason="Adjacent"/>
+    <disable_collisions link1="arm_link_1" link2="arm_link_3" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="arm_link_4" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="arm_link_5" reason="Never"/>
+    <disable_collisions link1="arm_link_2" link2="arm_link_3" reason="Adjacent"/>
+    <disable_collisions link1="arm_link_2" link2="arm_link_4" reason="Never"/>
+    <disable_collisions link1="arm_link_2" link2="arm_link_5" reason="Never"/>
+    <disable_collisions link1="arm_link_3" link2="arm_link_4" reason="Adjacent"/>
+    <disable_collisions link1="arm_link_3" link2="arm_link_5" reason="Never"/>
+    <disable_collisions link1="arm_link_4" link2="arm_link_5" reason="Adjacent"/>
+
+    <!-- ===================== Base-internal pairs =====================
+         The base is one rigid body as far as planning is concerned - the
+         wheels only spin about their own axis. Without these, the wheel
+         cylinders (r=0.08 at y=+/-0.12088) overlap base_link's collision
+         box at y=+/-0.10 and the robot is in self-collision before the arm
+         has moved at all, so every plan fails. -->
+    <disable_collisions link1="base_link" link2="front_left_wheel_link" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="front_right_wheel_link" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="rear_left_wheel_link" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="rear_right_wheel_link" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="imu_link" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="lidar_link" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="depth_link" reason="Adjacent"/>
+    <disable_collisions link1="front_left_wheel_link" link2="front_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="front_left_wheel_link" link2="rear_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="front_left_wheel_link" link2="rear_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="front_left_wheel_link" link2="imu_link" reason="Never"/>
+    <disable_collisions link1="front_left_wheel_link" link2="lidar_link" reason="Never"/>
+    <disable_collisions link1="front_left_wheel_link" link2="depth_link" reason="Never"/>
+    <disable_collisions link1="front_right_wheel_link" link2="rear_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="front_right_wheel_link" link2="rear_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="front_right_wheel_link" link2="imu_link" reason="Never"/>
+    <disable_collisions link1="front_right_wheel_link" link2="lidar_link" reason="Never"/>
+    <disable_collisions link1="front_right_wheel_link" link2="depth_link" reason="Never"/>
+    <disable_collisions link1="rear_left_wheel_link" link2="rear_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="rear_left_wheel_link" link2="imu_link" reason="Never"/>
+    <disable_collisions link1="rear_left_wheel_link" link2="lidar_link" reason="Never"/>
+    <disable_collisions link1="rear_left_wheel_link" link2="depth_link" reason="Never"/>
+    <disable_collisions link1="rear_right_wheel_link" link2="imu_link" reason="Never"/>
+    <disable_collisions link1="rear_right_wheel_link" link2="lidar_link" reason="Never"/>
+    <disable_collisions link1="rear_right_wheel_link" link2="depth_link" reason="Never"/>
+    <disable_collisions link1="imu_link" link2="lidar_link" reason="Never"/>
+    <disable_collisions link1="imu_link" link2="depth_link" reason="Never"/>
+    <disable_collisions link1="lidar_link" link2="depth_link" reason="Never"/>
+
+    <!-- ===================== Arm-to-base pairs =====================
+         arm_base_link is bolted to the plate and arm_link_1 only yaws just
+         above it, so neither can ever hit the base. arm_link_2..5 keep
+         base_link, lidar_link and depth_link ENABLED on purpose - those are
+         exactly the self-collisions the planner needs to avoid when the arm
+         reaches down or forward. The wheels and the IMU sit below the plate,
+         out of the arm's reach. -->
+    <disable_collisions link1="arm_base_link" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="arm_base_link" link2="front_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="front_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="rear_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="rear_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="imu_link" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="lidar_link" reason="Never"/>
+    <disable_collisions link1="arm_base_link" link2="depth_link" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="base_link" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="front_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="front_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="rear_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="rear_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="imu_link" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="lidar_link" reason="Never"/>
+    <disable_collisions link1="arm_link_1" link2="depth_link" reason="Never"/>
+    <disable_collisions link1="arm_link_2" link2="front_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_2" link2="front_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_2" link2="rear_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_2" link2="rear_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_2" link2="imu_link" reason="Never"/>
+    <disable_collisions link1="arm_link_3" link2="front_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_3" link2="front_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_3" link2="rear_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_3" link2="rear_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_3" link2="imu_link" reason="Never"/>
+    <disable_collisions link1="arm_link_4" link2="front_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_4" link2="front_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_4" link2="rear_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_4" link2="rear_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_4" link2="imu_link" reason="Never"/>
+    <disable_collisions link1="arm_link_5" link2="front_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_5" link2="front_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_5" link2="rear_left_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_5" link2="rear_right_wheel_link" reason="Never"/>
+    <disable_collisions link1="arm_link_5" link2="imu_link" reason="Never"/>
+</robot>

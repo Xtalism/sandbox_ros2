@@ -1,0 +1,51 @@
+# Self-hit removal for the LD19. Retuned after the lidar moved from
+# z=0.071 to z=0.015 on base_link (see lidar.xacro): the scan plane now
+# cuts through the chassis plate instead of passing above it, so what the
+# sensor sees of its own robot changed completely.
+#
+# Sectors below were measured, not estimated - spawned the robot in an
+# empty world with a horizontal ground plane (which a horizontal scan
+# plane can never hit), so every finite return in /scan_raw is a self-hit:
+#
+#   355.99deg .. 3.21deg    0.020-0.046 m   chassis front lip
+#   160.36deg .. 161.16deg  0.206-0.211 m   rear chassis corner (left)
+#   198.84deg .. 199.64deg  0.203-0.211 m   rear chassis corner (right)
+#
+# The old single "self_mast_sector" filter is gone: the mast runs from
+# z=0.0535 upward and no longer crosses the scan plane at all. It was also
+# blind to the new front return, which is the dangerous one - a permanent
+# phantom obstacle 4 cm ahead, straight in the driving direction.
+#
+# Angles are radians in the sensor's own frame, CCW from lidar_link's +x
+# (robot forward). range_max on each sector stays inside the nav2 footprint
+# (0.17 m ahead of base_link = 0.09 m ahead of the lidar; 0.25 m behind), so
+# nothing outside the robot's own body is ever discarded.
+scan_to_scan_filter_chain:
+  ros__parameters:
+    filter1:
+      name: self_front_lip
+      type: laser_filters/LaserScanSectorFilter
+      params:
+        # Wraps through zero: the filter adds 2*pi to the span when
+        # angle_max < angle_min, so this is one sector, not two.
+        # 354.0deg .. 5.0deg, with ~2deg margin on each measured edge.
+        angle_min: 6.178
+        angle_max: 0.087
+        range_min: 0.0
+        range_max: 0.08
+        clear_inside: true
+        invert: false
+
+    filter2:
+      name: self_rear_corners
+      type: laser_filters/LaserScanSectorFilter
+      params:
+        # 155deg .. 205deg - one window spanning both rear corners.
+        # Straight back (180deg) has no self-hit any more, but it sits
+        # inside the footprint out to 0.25 m regardless.
+        angle_min: 2.705
+        angle_max: 3.578
+        range_min: 0.0
+        range_max: 0.25
+        clear_inside: true
+        invert: false

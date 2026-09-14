@@ -1,9 +1,14 @@
+"""Full mobile-manipulator bringup: Gazebo + nav2/slam + MoveIt.
+
+The description, meshes, worlds and navigation parameters all come out of
+mecanum_description and manipulator_description - this package only owns the
+combined xacro, the combined controller file and the MoveIt config.
+"""
+
 import os
 from pathlib import Path
 
-from ament_index_python.packages import (
-    get_package_share_directory,
-)
+from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
@@ -17,17 +22,24 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
+from omni_manipulator_description.moveit_config import (
+    build_moveit_config,
+    robot_xacro_path,
+)
 
 
 def generate_launch_description():
-    use_robot_state_pub = LaunchConfiguration("use_robot_state_pub")
-    urdf_file = LaunchConfiguration("urdf_file")
     use_joint_state_pub = LaunchConfiguration("use_joint_state_pub")
+    use_moveit = LaunchConfiguration("use_moveit")
     use_sim_time = LaunchConfiguration("use_sim_time", default=True)
+
     bringup_dir = get_package_share_directory("omni_manipulator_description")
+    mecanum_dir = get_package_share_directory("mecanum_description")
+    manipulator_dir = get_package_share_directory("manipulator_description")
     slam_toolbox_share = get_package_share_directory("slam_toolbox")
     nav2_bringup_share = get_package_share_directory("nav2_bringup")
-    world = os.path.join(bringup_dir, "world", "bookstore_world", "bookstore.world")
+
+    world = os.path.join(mecanum_dir, "world", "bookstore_world", "bookstore.world")
 
     slam_toolbox_launch_source = os.path.join(
         slam_toolbox_share, "launch", "online_async_launch.py"
@@ -35,24 +47,21 @@ def generate_launch_description():
     nav2_launch_source = os.path.join(
         nav2_bringup_share, "launch", "navigation_launch.py"
     )
-    nav2_config_path = os.path.join(bringup_dir, "config", "nav2_params.yaml")
-    slam_config_path = os.path.join(bringup_dir, "config", "slam_toolbox_params.yaml")
+    nav2_config_path = os.path.join(mecanum_dir, "config", "nav2_params.yaml")
+    slam_config_path = os.path.join(mecanum_dir, "config", "slam_toolbox_params.yaml")
     laser_filters_config_path = os.path.join(
-        bringup_dir, "config", "laser_filters.yaml"
+        mecanum_dir, "config", "laser_filters.yaml"
     )
-    ekf_config_path = os.path.join(bringup_dir, "config", "ekf.yaml")
+    ekf_config_path = os.path.join(mecanum_dir, "config", "ekf.yaml")
+    gz_bridge_config_path = os.path.join(mecanum_dir, "config", "gz_bridge.yaml")
 
-    urdf_path = os.path.join(
-        bringup_dir, "description", "xacro", "omni_manipulator_description.urdf.xacro"
-    )
+    urdf_path = robot_xacro_path()
     robot_desc = ParameterValue(Command(["xacro ", urdf_path]), value_type=str)
 
+    moveit_config = build_moveit_config()
+
     robot_controllers = PathJoinSubstitution(
-        [
-            bringup_dir,
-            "config",
-            "mecanum_drive_controller.yaml",
-        ]
+        [bringup_dir, "config", "omni_manipulator_controllers.yaml"]
     )
     start_robot_state_publisher_cmd = Node(
         package="robot_state_publisher",
@@ -67,15 +76,20 @@ def generate_launch_description():
         executable="joint_state_publisher_gui",
         name="joint_state_publisher_gui",
         output="screen",
-        arguments=[urdf_file],
+        arguments=[urdf_path],
     )
+    # The meshes now live in two other packages, so gz needs the share root of
+    # each one on its resource path or every package:// URI in the combined
+    # description resolves to nothing and the robot spawns invisible.
     gz_resource_path = SetEnvironmentVariable(
         name="GZ_SIM_RESOURCE_PATH",
         value=":".join(
             [
-                os.path.join(bringup_dir, "world"),
-                os.path.join(bringup_dir, "world", "bookstore_world"),
-                os.path.join(bringup_dir, "world", "bookstore_world", "models"),
+                os.path.join(mecanum_dir, "world"),
+                os.path.join(mecanum_dir, "world", "bookstore_world"),
+                os.path.join(mecanum_dir, "world", "bookstore_world", "models"),
+                str(Path(mecanum_dir).parent.resolve()),
+                str(Path(manipulator_dir).parent.resolve()),
                 str(Path(bringup_dir).parent.resolve()),
             ]
         ),
@@ -131,7 +145,7 @@ def generate_launch_description():
         executable="parameter_bridge",
         parameters=[
             {
-                "config_file": os.path.join(bringup_dir, "config", "gz_bridge.yaml"),
+                "config_file": gz_bridge_config_path,
                 "qos_overrides./tf_static.publisher.durability": "transient_local",
                 "use_sim_time": True,
             }
@@ -195,6 +209,18 @@ def generate_launch_description():
         ],
         output="screen",
     )
+    manipulator_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "manipulator_controller",
+            "--param-file",
+            robot_controllers,
+            "--controller-manager",
+            "/controller_manager",
+        ],
+        output="screen",
+    )
     rviz_config_file = os.path.join(bringup_dir, "rviz", "config.rviz")
     rviz_node = Node(
         package="rviz2",
@@ -202,7 +228,13 @@ def generate_launch_description():
         name="rviz2",
         output="screen",
         arguments=["-d", rviz_config_file],
-        parameters=[{"use_sim_time": True}],
+        parameters=[
+            {"use_sim_time": True},
+            moveit_config.robot_description,
+            moveit_config.robot_description_semantic,
+            moveit_config.robot_description_kinematics,
+            moveit_config.joint_limits,
+        ],
     )
     slam_toolbox = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(slam_toolbox_launch_source),
@@ -218,17 +250,17 @@ def generate_launch_description():
             "params_file": nav2_config_path,
         }.items(),
     )
+    moveit = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(bringup_dir, "launch", "moveit.launch.py")
+        ),
+        condition=IfCondition(use_moveit),
+        launch_arguments={"use_sim_time": use_sim_time}.items(),
+    )
     return LaunchDescription(
         [
             DeclareLaunchArgument(
                 "use_sim_time", default_value="True", description="Use sim time if true"
-            ),
-            DeclareLaunchArgument(
-                "urdf_file",
-                default_value=os.path.join(
-                    bringup_dir, "urdf", "omni_manipulator_description.xacro.urdf"
-                ),
-                description="URDF file path",
             ),
             DeclareLaunchArgument(
                 "use_robot_state_pub",
@@ -239,6 +271,11 @@ def generate_launch_description():
                 "use_joint_state_pub",
                 default_value="False",
                 description="Whether to start the joint state publisher",
+            ),
+            DeclareLaunchArgument(
+                "use_moveit",
+                default_value="True",
+                description="Whether to start move_group for the arm",
             ),
             gz_resource_path,
             egl_vendor,
@@ -255,6 +292,7 @@ def generate_launch_description():
             voxel_marker_node,
             slam_toolbox,
             nav2_bringup,
+            moveit,
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=spawn_entity,
@@ -265,6 +303,12 @@ def generate_launch_description():
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster_spawner,
                     on_exit=[mecanum_drive_controller_spawner],
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=mecanum_drive_controller_spawner,
+                    on_exit=[manipulator_controller_spawner],
                 )
             ),
         ]

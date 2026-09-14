@@ -1,9 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<robot name="omni_manipulator_description" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
-  <xacro:include filename="robot_base.xacro"/>
-  <xacro:include filename="wheels.xacro"/>
-  <xacro:include filename="gazebo_control.xacro"/>
-  <xacro:include filename="imu.xacro"/>
-  <xacro:include filename="lidar.xacro"/>
-  <xacro:include filename="depth_sensor.xacro"/>
+<!-- Mobile manipulator: the mecanum_description base with the
+     manipulator_description arm bolted to its top plate.
+
+     Nothing is copied here - the base links/sensors and the arm macro are
+     included straight out of their own packages, so retuning either robot
+     upstream flows through to this one. The only things this file owns are
+     the mount pose, and the single gz_ros2_control plugin that drives both
+     subsystems from one controller_manager. -->
+<robot name="omni_manipulator" xmlns:xacro="http://www.ros.org/wiki/xacro" xmlns:gz="http://gazebosim.org/schema">
+
+  <xacro:include filename="$(find mecanum_description)/description/xacro/robot_base.xacro"/>
+  <xacro:include filename="$(find mecanum_description)/description/xacro/wheels.xacro"/>
+  <xacro:include filename="$(find mecanum_description)/description/xacro/imu.xacro"/>
+  <xacro:include filename="$(find mecanum_description)/description/xacro/lidar.xacro"/>
+  <xacro:include filename="$(find mecanum_description)/description/xacro/depth_sensor.xacro"/>
+  <xacro:include filename="$(find mecanum_description)/description/xacro/gazebo_control.xacro"/>
+
+  <xacro:include filename="$(find manipulator_description)/description/xacro/manipulator_macro.xacro"/>
+  <xacro:include filename="$(find manipulator_description)/description/xacro/manipulator_ros2_control.xacro"/>
+
+  <!-- The arm's own root link is called "base_link", same as the mobile
+       base's, so every arm link and joint is namespaced. Joint names become
+       arm_joint_1..5, which is what the controller and MoveIt configs in
+       this package's config/ refer to. -->
+  <xacro:property name="arm_prefix" value="arm_"/>
+  <xacro:property name="arm_mount_xyz" value="0.058 0 0.053"/>
+  <xacro:property name="arm_mount_rpy" value="0 0 0"/>
+
+  <xacro:manipulator prefix="${arm_prefix}" parent="base_link" joint_name="arm_mount_joint">
+    <origin xyz="${arm_mount_xyz}" rpy="${arm_mount_rpy}"/>
+  </xacro:manipulator>
+
+  <xacro:mecanum_wheel_friction/>
+  <xacro:mecanum_ros2_control name="MecanumSystem"/>
+  <xacro:manipulator_ros2_control name="ManipulatorSystem" prefix="${arm_prefix}"
+    initial_positions_file="$(find omni_manipulator_description)/config/initial_positions.yaml"/>
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find omni_manipulator_description)/config/omni_manipulator_controllers.yaml</parameters>
+      <ros>
+        <remapping>/mecanum_drive_controller/reference:=/cmd_vel</remapping>
+        <remapping>/mecanum_drive_controller/odometry:=/wheel_odom</remapping>
+      </ros>
+    </plugin>
+  </gazebo>
+
 </robot>

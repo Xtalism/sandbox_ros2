@@ -1,0 +1,15 @@
+# Joint angles the arm is spawned at, in radians.
+#
+# Consumed by the manipulator_ros2_control macro, which turns each entry into
+# a <param name="initial_value"> on that joint's position state_interface.
+# gz_ros2_control reads those and applies Gazebo's JointPositionReset, so the
+# arm materialises at this pose instead of at all-zeros.
+#
+# Keys are the arm's OWN joint names, without any prefix - the macro adds the
+# prefix itself, so the same file works mounted or standalone.
+initial_positions:
+  joint_1: 0.0
+  joint_2: 0.0
+  joint_3: 0.0
+  joint_4: 0.0
+  joint_5: 0.0

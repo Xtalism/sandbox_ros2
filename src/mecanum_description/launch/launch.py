@@ -24,12 +24,12 @@ def generate_launch_description():
     urdf_file = LaunchConfiguration("urdf_file")
     use_joint_state_pub = LaunchConfiguration("use_joint_state_pub")
     use_sim_time = LaunchConfiguration("use_sim_time", default=True)
-    bringup_dir = get_package_share_directory("omni_manipulator_description")
+    bringup_dir = get_package_share_directory("mecanum_description")
     world = os.path.join(bringup_dir, "world", "depot.sdf")
 
     # Changed to use URDF with xacro processing
     urdf_path = os.path.join(
-        bringup_dir, "description", "urdf", "omni_manipulator_description.xacro.urdf"
+        bringup_dir, "description", "urdf", "mecanum_description.xacro.urdf"
     )
     robot_desc = ParameterValue(Command(["xacro ", urdf_path]), value_type=str)
 
@@ -166,7 +166,7 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 "urdf_file",
                 default_value=os.path.join(
-                    bringup_dir, "urdf", "omni_manipulator_description.xacro.urdf"
+                    bringup_dir, "urdf", "mecanum_description.xacro.urdf"
                 ),
                 description="URDF file path",
             ),

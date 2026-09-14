@@ -14,11 +14,8 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    # Get the launch directory
     bringup_dir = get_package_share_directory("manipulator_description")
-    launch_dir = os.path.join(bringup_dir, "launch")
 
-    # Launch configuration variables specific to simulation
     rviz_config_file = LaunchConfiguration("rviz_config_file")
     use_robot_state_pub = LaunchConfiguration("use_robot_state_pub")
     use_joint_state_pub = LaunchConfiguration("use_joint_state_pub")
@@ -73,8 +70,6 @@ def generate_launch_description():
         executable="joint_state_publisher_gui",
         name="joint_state_publisher_gui",
         output="screen",
-        # Startup pose only. URDF zero stays at hardware zero; this just parks
-        # the arm folded instead of extended flat against its old end-stops.
         # parameters=[{"zeros": {"joint_3": 1.57079632679, "joint_4": 1.57079632679}}],
         arguments=[urdf_file],
     )
